@@ -1,26 +1,48 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useState} from 'react';
 import './App.css';
 
+import { Observable, Subject } from 'rxjs';
+
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const [message, setMessage] = useState([])
+	const messageContent = React.createRef()
+	const displayMessages = {
+		text: [],
+		count: 0
+	}
+
+	const subject = new Subject();
+
+	// FIRST SUBSCRIBTION
+	subject.subscribe({
+		next: (v) => displayMessages.text.push(v)
+	});
+
+	// SECOND SUBSCRIBTION
+	subject.subscribe({
+		next: (v) => displayMessages.text.push(v)
+	});
+
+	subject.next(message);
+
+	const submitHandler = e => {
+		e.preventDefault();
+		setMessage(searches => searches.concat(messageContent.current.value))
+	}
+
+	return (
+		<div className="App">
+		<header className="App-header">
+			{displayMessages.text.map((message, i) => {
+				return <li key={i}>{message}</li>
+			})}
+			<form onSubmit={submitHandler}>
+				<textarea ref={messageContent}></textarea>
+				<button type="submit">Send</button>
+			</form>
+		</header>
+		</div>
+	);
 }
 
 export default App;
