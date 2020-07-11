@@ -7,21 +7,34 @@ const Messages = (props) => {
 		height: 80%;
 		overflow-y: scroll;
 		scrollbar-width: none;
+		background: #FBFAFD
 	`
 
 	const Message = styled.div`
-		background: #66FCF1;
-		padding: 10px;
+		background: #fff;
+		padding: 10px 20px;
 		border-radius: 10px;
-		color: #fff;
 		margin: 5px 0;
 		width: min-content;
+		margin: 10px
+	`
+
+	const Content = styled.p`
+		font-size: 14px;
+		margin: 0;
+		color: #D2C5E8;
+	`
+
+	const Time = styled(Content)`
+		color: #6E6E6E;
+		font-size: 10px;
+		min-width: 50px;
 	`
 
 	return(
 		<MessagesWrapper>
-		{props.message.text.map((message, i) => {
-			return <Message key={i}>{message}</Message>
+		{props.messages.map((message, i) => {
+			return<Message key={i}><Time>{message.time}</Time><Content>{message.content}</Content></Message>
 		})}
 		</MessagesWrapper>
 	)
