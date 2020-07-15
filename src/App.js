@@ -1,7 +1,8 @@
 import React, {useState, useRef} from 'react';
 import styled from 'styled-components'
-
+import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import {Subject } from 'rxjs';
+import LinkContext from './LinkContext'
 
 import Header from './components/ChatInterface/Header'
 import Messages from './components/Messages/Messages';
@@ -28,12 +29,19 @@ const Form = styled.form`
 function App() {
 
 	const [message, setMessage] = useState([])
+	const [link, setLink] = useState('')
+
+	//RANDOM LINK GENERATOR
+	const generateLink = () => {
+		setLink(window.location.href + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15))
+	}
 
 	const messageContent = useRef()
 
 	let displayMessagesToFirstSubscriber = []
 	let displayMessagesToSecondSubscriber = []
 
+	//RXJS SUBSCRIPTION START
 	const subject = new Subject();
 
 	subject.subscribe({
@@ -53,6 +61,7 @@ function App() {
 
 	subject.next(message);
 
+	//CHAT DATA HANLDER
 	const submitHandler = e => {
 		e.preventDefault();
 		let date = new Date();
@@ -63,17 +72,27 @@ function App() {
 	}
 
 	return (
-		<div className="App">
-			<ChatContainer>
-				<GenerateLink />
-				<Header />
-				<Messages firstSub={displayMessagesToFirstSubscriber} secondSub={displayMessagesToSecondSubscriber}/>
-				<Form onSubmit={submitHandler}>
-					<Textarea messageContent={messageContent}></Textarea>
-					<Button />
-				</Form>
-			</ChatContainer>
-		</div>
+		<LinkContext.Provider value={link}>
+			<div className="App">
+				<Router>
+					<Switch>
+						<Route exact path="/">
+							<GenerateLink onClick={generateLink} link={link}/>
+						</Route>
+						<Route exact path={`/chat/${link}`}>
+							<ChatContainer>
+								<Header />
+								<Messages firstSub={displayMessagesToFirstSubscriber} secondSub={displayMessagesToSecondSubscriber}/>
+								<Form onSubmit={submitHandler}>
+									<Textarea messageContent={messageContent}></Textarea>
+									<Button />
+								</Form>
+							</ChatContainer>
+						</Route>
+					</Switch>
+				</Router>
+			</div>
+		</LinkContext.Provider>
 	);
 }
 

@@ -1,10 +1,14 @@
-import React, {useState} from 'react';
-import styled from 'styled-components'
+import React, {useContext} from 'react';
+import styled from 'styled-components';
+import LinkContext from '../../LinkContext'
 
 const GenerateWrapper = styled.div`
 	background: #FBFAFD;
 	text-align: center;
-	padding: 50px 10px
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 `
 const ButtonGenerate = styled.button`
 	padding: 20px;
@@ -25,21 +29,29 @@ const ButtonGenerate = styled.button`
 const YourLink = styled.p`
 	font-family: 'Nunito', sans-serif;
 	font-weight: 800;
-	font-size: 24px
+	font-size: 24px;
 `
 
-const GenerateLink = (props) => {
-	const [link, setLink] = useState()
+const YourLinkBtn = styled.a`
+	font-family: 'Nunito', sans-serif;
+	font-weight: 800;
+	font-size: 24px;
+	display: block;
+	margin-top: 20px;
+	color: #000;
+	text-decoration: none
+`
 
-	const generateLink = () => {
-		setLink(window.location.href + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15))
-	}
+const GenerateLink = ({onClick}) => {
+	const newChatLink = React.useContext(LinkContext)
 
 	return(
 		<GenerateWrapper>
+			<div>
 			<YourLink>Generate link and send to someone you want to talk</YourLink>
-			<ButtonGenerate onClick={generateLink}>Generate Link</ButtonGenerate>
-			<YourLink>{link}</YourLink>
+				<ButtonGenerate onClick={onClick}>Generate Link</ButtonGenerate>
+			<YourLinkBtn href={newChatLink}>{newChatLink}</YourLinkBtn>
+			</div>
 		</GenerateWrapper>
 	)
 }
