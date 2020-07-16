@@ -16,13 +16,13 @@ const Message = styled.div`
 const FirstSubscriber = styled.div`
 	width: 100%
 `
-const SecondSubscriber = styled.div`
-	width: 100%;
-	display: flex;
-	justify-content: flex-end;
-	text-align: right;
-	flex-wrap: wrap;
-`
+// const SecondSubscriber = styled.div`
+// 	width: 100%;
+// 	display: flex;
+// 	justify-content: flex-end;
+// 	text-align: right;
+// 	flex-wrap: wrap;
+// `
 const Content = styled.p`
 	font-size: 14px;
 	margin: 0;

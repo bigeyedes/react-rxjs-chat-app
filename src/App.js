@@ -2,7 +2,7 @@ import React, {useState, useRef} from 'react';
 import styled from 'styled-components'
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import {Subject } from 'rxjs';
-import LinkContext from './LinkContext'
+import Store from './store/Store';
 
 import Header from './components/ChatInterface/Header'
 import Messages from './components/Messages/Messages';
@@ -29,12 +29,7 @@ const Form = styled.form`
 function App() {
 
 	const [message, setMessage] = useState([])
-	const [link, setLink] = useState('')
-
-	//RANDOM LINK GENERATOR
-	const generateLink = () => {
-		setLink(window.location.href + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15))
-	}
+	const chatLinkFromStore = localStorage.getItem('link')
 
 	const messageContent = useRef()
 
@@ -46,14 +41,14 @@ function App() {
 
 	subject.subscribe({
 		next: (m1) => {
-			m1.map((content, i) => {
+			m1.map((content) => {
 				displayMessagesToFirstSubscriber.push(content)
 			})
 		}
 	});
 	subject.subscribe({
 		next: (m2) => {
-			m2.map((content, i) => {
+			m2.map((content) => {
 				displayMessagesToSecondSubscriber.push(content)
 			})
 		}
@@ -72,16 +67,16 @@ function App() {
 	}
 
 	return (
-		<LinkContext.Provider value={link}>
+		<Store>
 			<div className="App">
 				<Router>
 					<Switch>
 						<Route exact path="/">
-							<GenerateLink onClick={generateLink} link={link}/>
+							<GenerateLink />
 						</Route>
-						<Route exact path={`/chat/${link}`}>
+						<Route exact path={`/${chatLinkFromStore}`}>
 							<ChatContainer>
-								<Header />
+								<Header chatLinkFromStore={chatLinkFromStore} />
 								<Messages firstSub={displayMessagesToFirstSubscriber} secondSub={displayMessagesToSecondSubscriber}/>
 								<Form onSubmit={submitHandler}>
 									<Textarea messageContent={messageContent}></Textarea>
@@ -92,7 +87,7 @@ function App() {
 					</Switch>
 				</Router>
 			</div>
-		</LinkContext.Provider>
+		</Store>
 	);
 }
 

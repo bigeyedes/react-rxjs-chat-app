@@ -17,14 +17,20 @@ const CloseChat = styled.button`
 	padding: 5px;
 	font-weight: 800;
 	font-size: 16px;
-	border: none
+	border: none;
+	cursor: pointer
 `
 
-const Header = () => {
+const Header = (props) => {
+
+	const closeChatHanlder = () => {
+		window.location.href = '/'
+		localStorage.clear();
+	}
 
 	return(
 		<div>
-			<HeaderContainer>Chat number <CloseChat>Close chat</CloseChat></HeaderContainer>
+			<HeaderContainer>Chat number: {props.chatLinkFromStore} <CloseChat onClick={closeChatHanlder}>Close chat</CloseChat></HeaderContainer>
 		</div>
 	)
 }
