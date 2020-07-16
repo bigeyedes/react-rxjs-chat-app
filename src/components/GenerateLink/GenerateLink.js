@@ -5,6 +5,7 @@ import LinkContext from '../../LinkContext'
 const GenerateWrapper = styled.div`
 	background: #FBFAFD;
 	text-align: center;
+	padding: 50px 10px;
 	height: 100vh;
 	display: flex;
 	justify-content: center;
