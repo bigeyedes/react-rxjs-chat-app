@@ -1,6 +1,6 @@
-import React, {useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
+import {Context} from '../../store/Store'
 import styled from 'styled-components';
-import LinkContext from '../../LinkContext'
 
 const GenerateWrapper = styled.div`
 	background: #FBFAFD;
@@ -42,15 +42,26 @@ const YourLinkBtn = styled.a`
 	text-decoration: none
 `
 
-const GenerateLink = ({onClick}) => {
-	const newChatLink = React.useContext(LinkContext)
+const GenerateLink = () => {
+	const [link, setLink] = useState('')
+	const [state, dispatch] = useContext(Context)
+
+	//RANDOM LINK GENERATOR
+	const generateLink = () => {
+		setLink(Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5))
+	}
+
+	useEffect(() => {
+		const newLink = link;
+		dispatch({type: 'ADD_LINK', payload: newLink});
+	}, [link])
 
 	return(
 		<GenerateWrapper>
 			<div>
 			<YourLink>Generate link and send to someone you want to talk</YourLink>
-				<ButtonGenerate onClick={onClick}>Generate Link</ButtonGenerate>
-			<YourLinkBtn href={newChatLink}>{newChatLink}</YourLinkBtn>
+				<ButtonGenerate onClick={generateLink}>Generate Link</ButtonGenerate>
+				<YourLinkBtn href={link}>{link}</YourLinkBtn>
 			</div>
 		</GenerateWrapper>
 	)
