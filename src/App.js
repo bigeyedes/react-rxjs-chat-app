@@ -26,15 +26,26 @@ const Form = styled.form`
 	box-sizing: border-box;
 `
 
+const ChangeUser = styled.div`
+	background: #DAD0EB;
+	color: #fff;
+	padding: 5px;
+	font-weight: 800;
+	font-size: 16px;
+	border: none;
+	cursor: pointer;
+	text-align: center
+`
+
 function App() {
 
 	const [message, setMessage] = useState([])
+	const [user, setUser] = useState('user_1')
 	const chatLinkFromStore = localStorage.getItem('link')
 
 	const messageContent = useRef()
 
-	let displayMessagesToFirstSubscriber = []
-	let displayMessagesToSecondSubscriber = []
+	let massages = []
 
 	//RXJS SUBSCRIPTION START
 	const subject = new Subject();
@@ -42,14 +53,7 @@ function App() {
 	subject.subscribe({
 		next: (m1) => {
 			m1.map((content) => {
-				displayMessagesToFirstSubscriber.push(content)
-			})
-		}
-	});
-	subject.subscribe({
-		next: (m2) => {
-			m2.map((content) => {
-				displayMessagesToSecondSubscriber.push(content)
+				massages.push(content)
 			})
 		}
 	});
@@ -57,13 +61,23 @@ function App() {
 	subject.next(message);
 
 	//CHAT DATA HANLDER
-	const submitHandler = e => {
+	const sendMessageHandler = e => {
 		e.preventDefault();
 		let date = new Date();
+
 		setMessage(messagesVal => messagesVal.concat({
+			user: user,
 			content: messageContent.current.value,
-			time: `${date.getHours()}: ${date.getMinutes()}: ${date.getSeconds()} `
+			time: `${date.getHours()}: ${date.getMinutes()}: ${date.getSeconds()}`
 		}))
+	}
+
+	const userChangeHandler = () => {
+		if(user === 'user_1') {
+			setUser('user_2')
+		} else {
+			setUser('user_1')
+		}
 	}
 
 	return (
@@ -77,8 +91,9 @@ function App() {
 						<Route exact path={`/${chatLinkFromStore}`}>
 							<ChatContainer>
 								<Header chatLinkFromStore={chatLinkFromStore} />
-								<Messages firstSub={displayMessagesToFirstSubscriber} secondSub={displayMessagesToSecondSubscriber}/>
-								<Form onSubmit={submitHandler}>
+								<ChangeUser onClick={userChangeHandler}>Switch user: {user}</ChangeUser>
+								<Messages messageSubscription={massages} />
+								<Form onSubmit={sendMessageHandler}>
 									<Textarea messageContent={messageContent}></Textarea>
 									<Button />
 								</Form>

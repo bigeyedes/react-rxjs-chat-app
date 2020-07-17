@@ -10,19 +10,19 @@ const MessagesWrapper = styled.div`
 `
 const Message = styled.div`
 	margin: 5px 0;
-	width: 100%;
+	width: 90%;
 	margin: 10px;
 `
 const FirstSubscriber = styled.div`
 	width: 100%
 `
-// const SecondSubscriber = styled.div`
-// 	width: 100%;
-// 	display: flex;
-// 	justify-content: flex-end;
-// 	text-align: right;
-// 	flex-wrap: wrap;
-// `
+const SecondSubscriber = styled.div`
+	width: 100%;
+	display: flex;
+	justify-content: flex-end;
+	text-align: right;
+	flex-wrap: wrap;
+`
 const Content = styled.p`
 	font-size: 14px;
 	margin: 0;
@@ -44,18 +44,22 @@ const Time = styled(Content)`
 
 const Messages = (props) => {
 
+	const userMessages = []
+
+	props.messageSubscription.map((message, i) => {
+		userMessages.push(message)
+	})
+
 	return(
 		<MessagesWrapper>
-			<FirstSubscriber>
-				{props.firstSub.map((message, i) => {
-					return<Message key={i}><Time>{message.time}</Time><Content>{message.content}</Content></Message>
-				})}
-			</FirstSubscriber>
-			{/* <SecondSubscriber>
-				{props.secondSub.map((message, i) => {
-					return<Message key={i}><Time>{message.time}</Time><Content>{message.content}</Content></Message>
-				})}
-			</SecondSubscriber> */}
+			{userMessages.map((message, i) => {
+				const messageStructure = <Message key={i}><Time>{message.user}{message.time}</Time><Content>{message.content}</Content></Message>
+				{if (message.user === 'user_1') {
+					return<FirstSubscriber>{messageStructure}</FirstSubscriber>
+				} else {
+					return<SecondSubscriber>{messageStructure}</SecondSubscriber>
+				}}
+			})}
 		</MessagesWrapper>
 	)
 }
