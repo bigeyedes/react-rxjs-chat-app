@@ -1,8 +1,10 @@
-import React, {useState, useRef, useContext} from 'react';
+import React, {useState, useRef, useContext, useEffect} from 'react';
 import styled from 'styled-components'
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import {Subject } from 'rxjs';
 import {Context} from './store/Store'
+import firebase from 'firebase/app'
+import 'firebase/firestore'
 
 import Header from './components/ChatInterface/Header'
 import Messages from './components/Messages/Messages';
@@ -41,10 +43,12 @@ function App() {
 
 	const [message, setMessage] = useState([])
 	const [user, setUser] = useState('user_1')
-	const chatLinkFromStore = localStorage.getItem('link')
+	const [error, setError] = useState(null)
+
+	const store = useContext(Context)
+	const chatLinkFromStore= store[0].link
 
 	const messageContent = useRef()
-
 	let massages = []
 
 	//RXJS SUBSCRIPTION START
@@ -72,25 +76,17 @@ function App() {
 		}))
 	}
 
-	const userChangeHandler = () => {
-		if(user === 'user_1') {
-			setUser('user_2')
-		} else {
-			setUser('user_1')
-		}
-	}
-
 	return (
 		<div className="App">
 			<Router>
 				<Switch>
 					<Route exact path="/">
 						<GenerateLink />
+						{error}
 					</Route>
 					<Route exact path={`/${chatLinkFromStore}`}>
 						<ChatContainer>
 							<Header chatLinkFromStore={chatLinkFromStore} />
-							<ChangeUser onClick={userChangeHandler}>Switch user: {user}</ChangeUser>
 							<Messages messageSubscription={massages} />
 							<Form onSubmit={sendMessageHandler}>
 								<Textarea messageContent={messageContent}></Textarea>

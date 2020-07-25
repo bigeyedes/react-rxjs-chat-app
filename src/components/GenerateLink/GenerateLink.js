@@ -2,6 +2,8 @@ import React, {useState, useContext, useEffect, useRef} from 'react';
 import {Context} from '../../store/Store'
 import styled from 'styled-components';
 
+import firebase from '../../firebase/config'
+
 const GenerateWrapper = styled.div`
 	background: #FBFAFD;
 	text-align: center;
@@ -16,13 +18,16 @@ const NameInput = styled.input`
 	font-family: 'Nunito', sans-serif;
 	color: #D2C5E8;
 	border: none;
-	cursor: pointer;
 	font-weight: 800;
 	font-size: 18px;
 	transition: .3s all ease;
 	&:hover {
 		background: #DAD0EB;
 		color: #fff
+	}
+	&:focus {
+		border: none;
+		outline: none
 	}
 `
 const ButtonGenerate = styled.button`
@@ -74,7 +79,7 @@ const GenerateLink = () => {
 			name: name,
 			link: link
 		};
-		dispatch({type: 'ADD_LINK', payload: data});
+		dispatch({type: 'ADD_ROOM', payload: data});
 	}, [link])
 
 	return(
@@ -83,7 +88,7 @@ const GenerateLink = () => {
 			<YourLink>Generate link and send to someone you want to talk</YourLink>
 				<form onSubmit={nameLinkGenerator}>
 					<NameInput ref={nameRef} type="text" placeholder="Type name..." />
-					<ButtonGenerate type="submit" >Generate Link</ButtonGenerate>
+					<ButtonGenerate type="submit">Generate Link</ButtonGenerate>
 				</form>
 				<YourLinkBtn href={link}>{link}</YourLinkBtn>
 			</div>
