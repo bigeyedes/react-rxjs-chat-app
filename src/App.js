@@ -1,8 +1,8 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useContext} from 'react';
 import styled from 'styled-components'
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import {Subject } from 'rxjs';
-import Store from './store/Store';
+import {Context} from './store/Store'
 
 import Header from './components/ChatInterface/Header'
 import Messages from './components/Messages/Messages';
@@ -81,28 +81,26 @@ function App() {
 	}
 
 	return (
-		<Store>
-			<div className="App">
-				<Router>
-					<Switch>
-						<Route exact path="/">
-							<GenerateLink />
-						</Route>
-						<Route exact path={`/${chatLinkFromStore}`}>
-							<ChatContainer>
-								<Header chatLinkFromStore={chatLinkFromStore} />
-								<ChangeUser onClick={userChangeHandler}>Switch user: {user}</ChangeUser>
-								<Messages messageSubscription={massages} />
-								<Form onSubmit={sendMessageHandler}>
-									<Textarea messageContent={messageContent}></Textarea>
-									<Button />
-								</Form>
-							</ChatContainer>
-						</Route>
-					</Switch>
-				</Router>
-			</div>
-		</Store>
+		<div className="App">
+			<Router>
+				<Switch>
+					<Route exact path="/">
+						<GenerateLink />
+					</Route>
+					<Route exact path={`/${chatLinkFromStore}`}>
+						<ChatContainer>
+							<Header chatLinkFromStore={chatLinkFromStore} />
+							<ChangeUser onClick={userChangeHandler}>Switch user: {user}</ChangeUser>
+							<Messages messageSubscription={massages} />
+							<Form onSubmit={sendMessageHandler}>
+								<Textarea messageContent={messageContent}></Textarea>
+								<Button />
+							</Form>
+						</ChatContainer>
+					</Route>
+				</Switch>
+			</Router>
+		</div>
 	);
 }
 
